@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: matching-service-deployment
+  labels:
+    app: matching-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: matching-service
+  template:
+    metadata:
+      labels:
+        app: matching-service
+    spec:
+      containers:
+      - name: matching-service
+        image: kyueran/cs3219-matching-service:demo
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6006
+        env:
+        - name: MATCHING_SERVICE_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: main-config
+              key: MATCHING_SERVICE_PORT
+      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: matching-service-service
+spec:
+  selector:
+    app: matching-service
+  ports:
+    - protocol: TCP
+      port: 6006
+      targetPort: 6006

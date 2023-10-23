@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: kyueran/cs3219-frontend:demo
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: FRONTEND_SERVICE
+          valueFrom:
+            configMapKeyRef:
+              name: main-config
+              key: FRONTEND_SERVICE
+        - name: QUESTION_SERVICE
+          valueFrom:
+            configMapKeyRef:
+              name: main-config
+              key: QUESTION_SERVICE
+        - name: MATCHING_SERVICE
+          valueFrom:
+            configMapKeyRef:
+              name: main-config
+              key: MATCHING_SERVICE
+        - name: USER_SERVICE
+          valueFrom:
+            configMapKeyRef:
+              name: main-config
+              key: USER_SERVICE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000

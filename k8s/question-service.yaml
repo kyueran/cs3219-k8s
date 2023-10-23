@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: question-service-deployment
+  labels:
+    app: question-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: question-service
+  template:
+    metadata:
+      labels:
+        app: question-service
+    spec:
+      containers:
+      - name: question-service
+        image: kyueran/cs3219-question-service:demo
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5001
+        env:
+        - name: QUESTION_SERVICE_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: main-config
+              key: QUESTION_SERVICE_PORT
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: question-service-service
+spec:
+  selector:
+    app: question-service
+  ports:
+    - protocol: TCP
+      port: 5001
+      targetPort: 5001

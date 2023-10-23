@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: main-config
+data:
+  FRONTEND_SERVICE: http://peerprep.com
+  QUESTION_SERVICE: http://peerprep.com/question-service
+  USER_SERVICE: http://peerprep.com/user-service
+  MATCHING_SERVICE: http://peerprep.com/matching-service
+  QUESTION_SERVICE_PORT: "5001"
+  USER_SERVICE_PORT: "5005"
+  MATCHING_SERVICE_PORT: "6006"
+  
+  
+
